@@ -1,15 +1,13 @@
 <template>
   <div>
     <b-jumbotron>
-      <template v-slot:lead>
-        {{ currentQuestion.question }}
-      </template>
+      <template v-slot:lead>{{ currentQuestion.question }}</template>
 
       <hr class="my-4" />
 
-      <p v-for="(answer, index) in possibleAnswears" :key="index">
-        {{ answer }}
-      </p>
+      <b-list-group>
+        <b-list-group-item v-for="(answer, index) in shuffeledAnswears" :key="index">{{ answer }}</b-list-group-item>
+      </b-list-group>
 
       <b-button variant="primary">Submit</b-button>
       <b-button variant="success" @click="nextQuestion">Next</b-button>
@@ -18,11 +16,12 @@
 </template>
 
 <script>
+const _ = require("lodash");
+
 export default {
   props: {
     currentQuestion: Object,
-    nextQuestion: Function,
-    possibleAnswears: []
+    nextQuestion: Function
   },
   watch: {
     currentQuestion: {
@@ -30,18 +29,47 @@ export default {
       handler() {
         this.selectedIndex = null;
         this.answered = false;
-        this.answers();
+        this.shuffleAnswears();
       }
     }
   },
+  data() {
+    return {
+      selectedAnswear: null,
+      correctAnswer: null,
+      shuffeledAnswears: []
+    };
+  },
   methods: {
-    answers() {
-      let answers = [...this.currentQuestion.incorrect_answers];
-      answers.push(this.currentQuestion.correct_answer);
-      this.possibleAnswears = answers;
+    shuffleAnswears() {
+      let answers = [
+        ...this.currentQuestion.incorrect_answers,
+        this.currentQuestion.correct_answer
+      ];
+      this.shuffeledAnswears = _.shuffle(answers);
+      this.correctAnswer = this.shuffeledAnswears.indexOf(
+        this.currentQuestion.correct_answer
+      );
     }
+  },
+  selectAnswear(index) {
+    this.selectedAnswear = index;
   }
 };
 </script>
 
-<style></style>
+<style>
+.selected {
+  background-color: lightblue;
+}
+.correct {
+  background-color: lightgreen;
+}
+.wrong {
+  background-color: lightcoral;
+}
+.list-group-item:hover {
+  background: azure;
+  cursor: pointer;
+}
+</style>
