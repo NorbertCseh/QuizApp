@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <Header />
+    <Header :correctQuestions="correctQuestions" :totalQuestions="totalQuestions" />
     <QuizBox
       v-if="questions.length"
       v-bind:currentQuestion="questions[index]"
       v-bind:nextQuestion="nextQuestion"
+      :increment="increment"
     />
   </div>
 </template>
@@ -24,12 +25,20 @@ export default {
   data() {
     return {
       questions: [],
-      index: 0
+      index: 0,
+      correctQuestions: 0,
+      totalQuestions: 0
     };
   },
   methods: {
     nextQuestion() {
       this.index++;
+    },
+    increment(isCorrect) {
+      if (isCorrect) {
+        this.correctQuestions++;
+      }
+      this.totalQuestions++;
     }
   },
   mounted() {
