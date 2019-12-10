@@ -1,7 +1,9 @@
 <template>
   <div>
     <b-jumbotron>
-      <template v-slot:lead>{{ currentQuestion.question }}</template>
+      <template v-slot:lead>{{
+        replaceChars(currentQuestion.question)
+      }}</template>
 
       <hr class="my-4" />
 
@@ -12,9 +14,15 @@
           :key="index"
           @click.prevent="selectAnswear(index)"
           :class="changeClass(index)"
-        >{{ answer }}</b-button>
+          >{{ replaceChars(answer) }}</b-button
+        >
       </b-list-group>
-      <b-button variant="success" @click="nextQuestion" :disabled="totalQuestions===9">Next</b-button>
+      <b-button
+        variant="success"
+        @click="nextQuestion"
+        :disabled="totalQuestions === 9"
+        >Next</b-button
+      >
     </b-jumbotron>
   </div>
 </template>
@@ -87,7 +95,16 @@ export default {
       }
       return answerClass;
     },
-    newQuiz() {}
+    replaceChars(str) {
+      str = str.split("&amp;").join("&");
+      str = str.split("&gt;").join(">");
+      str = str.split("&lt;").join("<");
+      str = str.split("&quot;").join('"');
+      str = str.split("&#039;").join("'");
+      str = str.split("&eacute;").join("é");
+
+      return str;
+    }
   }
 };
 </script>
