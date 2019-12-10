@@ -14,14 +14,19 @@
           :key="index"
           @click.prevent="selectAnswear(index)"
           :class="changeClass(index)"
+          :disabled="answered"
           >{{ replaceChars(answer) }}</b-button
         >
       </b-list-group>
       <b-button
         variant="success"
         @click="nextQuestion"
-        :disabled="totalQuestions === 9"
+        :disabled="totalQuestions === 10 || !answered"
+        :hidden="totalQuestions === 10"
         >Next</b-button
+      >
+      <b-button :hidden="totalQuestions !== 10" @click="reloadPage()">
+        Start new Quiz</b-button
       >
     </b-jumbotron>
   </div>
@@ -79,19 +84,19 @@ export default {
     changeClass(index) {
       let answerClass = "";
       if (this.answered && this.correctAnswer === index) {
-        answerClass = "correct disabled";
+        answerClass = "correct ";
       } else if (
         this.answered &&
         this.selectedAnswear === index &&
         this.correctAnswer !== index
       ) {
-        answerClass = "wrong disabled";
+        answerClass = "wrong";
       } else if (
         this.answered &&
         this.selectedAnswear !== index &&
         this.correctAnswer !== index
       ) {
-        answerClass = "disabled";
+        answerClass = "";
       }
       return answerClass;
     },
@@ -102,8 +107,10 @@ export default {
       str = str.split("&quot;").join('"');
       str = str.split("&#039;").join("'");
       str = str.split("&eacute;").join("é");
-
       return str;
+    },
+    reloadPage() {
+      window.location.reload();
     }
   }
 };

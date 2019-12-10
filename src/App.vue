@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <Header :correctQuestions="correctQuestions" :totalQuestions="totalQuestions" />
+    <Header
+      :correctQuestions="correctQuestions"
+      :totalQuestions="totalQuestions"
+    />
     <QuizBox
       v-if="questions.length"
       v-bind:currentQuestion="questions[index]"
@@ -28,18 +31,18 @@ export default {
       questions: [],
       index: 0,
       correctQuestions: 0,
-      totalQuestions: 0
+      totalQuestions: 1
     };
   },
   methods: {
     nextQuestion() {
       this.index++;
-      this.totalQuestions++;
     },
     increment(isCorrect) {
       if (isCorrect) {
         this.correctQuestions++;
       }
+      this.totalQuestions++;
     }
   },
   mounted() {
