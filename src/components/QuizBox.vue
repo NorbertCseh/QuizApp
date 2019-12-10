@@ -6,20 +6,15 @@
       <hr class="my-4" />
 
       <b-list-group>
-        <b-list-group-item
+        <b-button
+          variant="light"
           v-for="(answer, index) in shuffeledAnswears"
           :key="index"
           @click.prevent="selectAnswear(index)"
           :class="changeClass(index)"
-        >{{ answer }}</b-list-group-item>
+        >{{ answer }}</b-button>
       </b-list-group>
-
-      <b-button
-        variant="primary"
-        @click="submitAnswear()"
-        :disabled="selectedAnswear === null || answered"
-      >Submit</b-button>
-      <b-button variant="success" @click="nextQuestion">Next</b-button>
+      <b-button variant="success" @click="nextQuestion" :disabled="totalQuestions===9">Next</b-button>
     </b-jumbotron>
   </div>
 </template>
@@ -31,7 +26,8 @@ export default {
   props: {
     currentQuestion: Object,
     nextQuestion: Function,
-    increment: Function
+    increment: Function,
+    totalQuestions: Number
   },
   watch: {
     currentQuestion: {
@@ -64,8 +60,6 @@ export default {
     },
     selectAnswear(index) {
       this.selectedAnswear = index;
-    },
-    submitAnswear() {
       let isCorrect = false;
 
       if (this.selectedAnswear === this.correctAnswer) {
@@ -76,33 +70,36 @@ export default {
     },
     changeClass(index) {
       let answerClass = "";
-      if (!this.answered && this.selectedAnswear === index) {
-        answerClass = "selected";
-      } else if (this.answered && this.correctAnswer === index) {
-        answerClass = "correct";
+      if (this.answered && this.correctAnswer === index) {
+        answerClass = "correct disabled";
       } else if (
         this.answered &&
         this.selectedAnswear === index &&
         this.correctAnswer !== index
       ) {
-        answerClass = "wrong";
+        answerClass = "wrong disabled";
+      } else if (
+        this.answered &&
+        this.selectedAnswear !== index &&
+        this.correctAnswer !== index
+      ) {
+        answerClass = "disabled";
       }
       return answerClass;
-    }
+    },
+    newQuiz() {}
   }
 };
 </script>
 
-<style>
-.selected {
-  background-color: lightblue;
-}
+<style scoped>
 .correct {
   background-color: lightgreen;
 }
 .wrong {
   background-color: lightcoral;
 }
+
 .list-group-item:hover {
   background: azure;
   cursor: pointer;

@@ -6,6 +6,7 @@
       v-bind:currentQuestion="questions[index]"
       v-bind:nextQuestion="nextQuestion"
       :increment="increment"
+      :totalQuestions="totalQuestions"
     />
   </div>
 </template>
@@ -33,12 +34,12 @@ export default {
   methods: {
     nextQuestion() {
       this.index++;
+      this.totalQuestions++;
     },
     increment(isCorrect) {
       if (isCorrect) {
         this.correctQuestions++;
       }
-      this.totalQuestions++;
     }
   },
   mounted() {
