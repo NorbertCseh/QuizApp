@@ -1,9 +1,11 @@
 <template>
   <div>
     <b-jumbotron>
-      <template v-slot:lead>{{
+      <template v-slot:lead>
+        {{
         replaceChars(currentQuestion.question)
-      }}</template>
+        }}
+      </template>
 
       <hr class="my-4" />
 
@@ -15,19 +17,15 @@
           @click.prevent="selectAnswear(index)"
           :class="changeClass(index)"
           :disabled="answered"
-          >{{ replaceChars(answer) }}</b-button
-        >
+        >{{ replaceChars(answer) }}</b-button>
       </b-list-group>
       <b-button
         variant="success"
         @click="nextQuestion"
-        :disabled="totalQuestions === 10 || !answered"
-        :hidden="totalQuestions === 10"
-        >Next</b-button
-      >
-      <b-button :hidden="totalQuestions !== 10" @click="reloadPage()">
-        Start new Quiz</b-button
-      >
+        :disabled="totalQuestions === 11 || !answered"
+        :hidden="totalQuestions === 11"
+      >Next</b-button>
+      <b-button :hidden="totalQuestions !== 11" @click="reloadPage()">Start new Quiz</b-button>
     </b-jumbotron>
   </div>
 </template>
@@ -40,7 +38,8 @@ export default {
     currentQuestion: Object,
     nextQuestion: Function,
     increment: Function,
-    totalQuestions: Number
+    totalQuestions: Number,
+    collectAnswears: Function
   },
   watch: {
     currentQuestion: {
@@ -80,6 +79,11 @@ export default {
       }
       this.answered = true;
       this.increment(isCorrect);
+      this.collectAnswears(
+        this.replaceChars(this.currentQuestion.question),
+        this.currentQuestion.correct_answer,
+        this.shuffeledAnswears[this.selectedAnswear]
+      );
     },
     changeClass(index) {
       let answerClass = "";

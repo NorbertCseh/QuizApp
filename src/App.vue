@@ -1,16 +1,15 @@
 <template>
   <div id="app">
-    <Header
-      :correctQuestions="correctQuestions"
-      :totalQuestions="totalQuestions"
-    />
+    <Header :correctQuestions="correctQuestions" :totalQuestions="totalQuestions" />
     <QuizBox
       v-if="questions.length"
       v-bind:currentQuestion="questions[index]"
       v-bind:nextQuestion="nextQuestion"
       :increment="increment"
       :totalQuestions="totalQuestions"
+      :collectAnswears="collectAnswears"
     />
+    <Score :answeredQuestions="answeredQuestions" />
   </div>
 </template>
 
@@ -19,19 +18,22 @@ const axios = require("axios");
 
 import Header from "./components/Header.vue";
 import QuizBox from "./components/QuizBox.vue";
+import Score from "./components/Score.vue";
 
 export default {
   name: "app",
   components: {
     Header,
-    QuizBox
+    QuizBox,
+    Score
   },
   data() {
     return {
       questions: [],
       index: 0,
       correctQuestions: 0,
-      totalQuestions: 1
+      totalQuestions: 1,
+      answeredQuestions: []
     };
   },
   methods: {
@@ -43,6 +45,15 @@ export default {
         this.correctQuestions++;
       }
       this.totalQuestions++;
+    },
+    collectAnswears(question, correctAnswear, selectedAnswear) {
+      let questionObj = {
+        index: this.index + 1 + ".",
+        question: question,
+        correctAnswear: correctAnswear,
+        selectedAnswear: selectedAnswear
+      };
+      this.answeredQuestions.push(questionObj);
     }
   },
   mounted() {
