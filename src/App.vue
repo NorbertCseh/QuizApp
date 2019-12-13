@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="container">
     <Header :correctQuestions="correctQuestions" :totalQuestions="totalQuestions" />
     <QuizBox
       v-if="questions.length"
