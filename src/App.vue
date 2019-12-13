@@ -3,13 +3,15 @@
     <Header :correctQuestions="correctQuestions" :totalQuestions="totalQuestions" />
     <QuizBox
       v-if="questions.length"
+      v-show="totalQuestions!==10"
       v-bind:currentQuestion="questions[index]"
       v-bind:nextQuestion="nextQuestion"
       :increment="increment"
       :totalQuestions="totalQuestions"
       :collectAnswears="collectAnswears"
+      :replaceChars="replaceChars"
     />
-    <Score :answeredQuestions="answeredQuestions" />
+    <Score v-if="totalQuestions===10" :answeredQuestions="answeredQuestions" />
   </div>
 </template>
 
@@ -32,8 +34,9 @@ export default {
       questions: [],
       index: 0,
       correctQuestions: 0,
-      totalQuestions: 1,
-      answeredQuestions: []
+      totalQuestions: 0,
+      answeredQuestions: [],
+      isCorrect: false
     };
   },
   methods: {
@@ -43,17 +46,30 @@ export default {
     increment(isCorrect) {
       if (isCorrect) {
         this.correctQuestions++;
+        this.isCorrect = true;
+      } else {
+        this.isCorrect = false;
       }
       this.totalQuestions++;
     },
     collectAnswears(question, correctAnswear, selectedAnswear) {
       let questionObj = {
         index: this.index + 1 + ".",
-        question: question,
-        correctAnswear: correctAnswear,
-        selectedAnswear: selectedAnswear
+        question: this.replaceChars(question),
+        correctAnswear: this.replaceChars(correctAnswear),
+        selectedAnswear: this.replaceChars(selectedAnswear),
+        _rowVariant: this.isCorrect ? "success" : "danger"
       };
       this.answeredQuestions.push(questionObj);
+    },
+    replaceChars(str) {
+      str = str.split("&amp;").join("&");
+      str = str.split("&gt;").join(">");
+      str = str.split("&lt;").join("<");
+      str = str.split("&quot;").join('"');
+      str = str.split("&#039;").join("'");
+      str = str.split("&eacute;").join("é");
+      return str;
     }
   },
   mounted() {

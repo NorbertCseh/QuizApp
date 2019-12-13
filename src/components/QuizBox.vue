@@ -22,10 +22,9 @@
       <b-button
         variant="success"
         @click="nextQuestion"
-        :disabled="totalQuestions === 11 || !answered"
-        :hidden="totalQuestions === 11"
+        :disabled="totalQuestions === 10 || !answered"
+        :hidden="totalQuestions === 10"
       >Next</b-button>
-      <b-button :hidden="totalQuestions !== 11" @click="reloadPage()">Start new Quiz</b-button>
     </b-jumbotron>
   </div>
 </template>
@@ -39,7 +38,8 @@ export default {
     nextQuestion: Function,
     increment: Function,
     totalQuestions: Number,
-    collectAnswears: Function
+    collectAnswears: Function,
+    replaceChars: Function
   },
   watch: {
     currentQuestion: {
@@ -80,7 +80,7 @@ export default {
       this.answered = true;
       this.increment(isCorrect);
       this.collectAnswears(
-        this.replaceChars(this.currentQuestion.question),
+        this.currentQuestion.question,
         this.currentQuestion.correct_answer,
         this.shuffeledAnswears[this.selectedAnswear]
       );
@@ -103,18 +103,6 @@ export default {
         answerClass = "";
       }
       return answerClass;
-    },
-    replaceChars(str) {
-      str = str.split("&amp;").join("&");
-      str = str.split("&gt;").join(">");
-      str = str.split("&lt;").join("<");
-      str = str.split("&quot;").join('"');
-      str = str.split("&#039;").join("'");
-      str = str.split("&eacute;").join("é");
-      return str;
-    },
-    reloadPage() {
-      window.location.reload();
     }
   }
 };

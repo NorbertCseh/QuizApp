@@ -1,18 +1,33 @@
 <template>
-  <div class="container">
-    <h2>Table</h2>
-    <b-table
-      hover
-      :items="answeredQuestions"
-      :class="changeClass(correctAnswear, selectedAnswear)"
-    ></b-table>
-  </div>
+  <b-table hover :items="answeredQuestions" :fields="fields"></b-table>
 </template>
 
 <script>
 export default {
   props: {
     answeredQuestions: Array
+  },
+  data() {
+    return {
+      fields: [
+        {
+          key: "index",
+          label: ""
+        },
+        {
+          key: "question",
+          label: "Question"
+        },
+        {
+          key: "correctAnswear",
+          label: "Correct Answer"
+        },
+        {
+          key: "selectedAnswear",
+          label: "Selected Answer"
+        }
+      ]
+    };
   },
   methods: {
     changeClass(correctAnswear, selectedAnswear) {
@@ -27,10 +42,10 @@ export default {
 </script>
 
 <style scoped>
-td.wrong {
+.wrong {
   background: red;
 }
-td.correct {
+.correct {
   background: green;
 }
 </style>
